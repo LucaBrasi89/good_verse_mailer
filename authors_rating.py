@@ -2,7 +2,7 @@
 
 #        отступы табуляцией
 #        by Andrew Sotnikov aka Luca Brasi,
-#        e-mail: andruha.sota@mail.ru
+#        e-mail: andrew.sotnikov@zoho.com
 #        --------------
 
         # Поддерживает в актуальном состоянии количество подписчиков и рейтинг
@@ -95,7 +95,7 @@ class Rating():
 # Формирует HTML файл с ТОП - n атворов
 class RatingFile():
 
-    output_file='/tmp/authors_rating_file.html'
+    output_file='/srv/http/poetry.com/authors_rating_file.html'
     top=15
 
     def __init__(self):

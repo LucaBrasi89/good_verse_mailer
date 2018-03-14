@@ -2,7 +2,7 @@
 
 #        отступы табуляцией
 #        by Andrew Sotnikov aka Luca Brasi,
-#        e-mail: andruha.sota@mail.ru
+#        e-mail: andrew.sotnikov@zoho.com
 #        --------------
 
         # Заменяет в таблице имена авторов на id в таблице contacts

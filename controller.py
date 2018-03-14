@@ -2,7 +2,7 @@
 
 #        отступы табуляцией
 #        by Andrew Sotnikov aka Luca Brasi,
-#        e-mail: andruha.sota@mail.ru
+#        e-mail: andrew.sotnikov@zoho.com
 #        --------------
 
 from saumysql import Crud
@@ -258,22 +258,22 @@ class SendMail(Logs):
              {5}\n\n
              ___________________________
              Have a nice day!\n
-             http://poetry.progreso.com.ua\n
+             http://poetry.dnsup.net:8000/\n
 
              created by Andrew Sotnikov\n
-             Hyper Logic Adjustable Mailer, 2017\n
+             Hyper Logic Adjustable Mailer, 2018\n
              '''.format(name,verse_data[1],' ',verse_data[2],' ',
               verse_data[3])
 
         message=MIMEText(text, _charset='utf-8')
 
-        message['From']='Andrew Sotnikov <andrew.sotnikov.hlam@mail.ru>'
+        message['From']='Andrew Sotnikov <GoodVerseMailer@gmail.com>'
         message['To']=email
         message['Subject']='Тебе пришел свежий стишок!)'
 
         try:
             time.sleep(5) #Чтобы не грузить сервер
-            smtp = smtplib.SMTP('mech-engineer')
+            smtp = smtplib.SMTP('engineer')
             smtp.send_message(message)
             smtp.quit()
             print ("Successfully sent email")
