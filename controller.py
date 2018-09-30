@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-#        отступы табуляцией
+#        отступы пробелами
 #        by Andrew Sotnikov aka Luca Brasi,
 #        e-mail: andrew.sotnikov@zoho.com
 #        --------------
@@ -49,7 +49,7 @@ class Logs():
         # Время недели в секунах - week = 7x24x3600 = 604800
         week = 86400
         self.crud.sql='SELECT last_time FROM time_marks WHERE name=\'log\''
-        last_time = (self.crud.readAct())[0]
+        last_time = (self.crud.readAct())[0][0]
         elapsed = self.curTime - last_time
 
         #Проверяем сколько времени прошло
@@ -166,7 +166,7 @@ class CreateQueueTable(Logs):
         crud.sql='''SELECT * FROM verses_list WHERE author_id={0}
                     ORDER BY RAND() LIMIT 1'''.format(rand_author)
         #Возвращает кортеж, поэтому прийдеться извлечь ключ
-        verse_id=(crud.readAct())[0]
+        verse_id=(crud.readAct())[0][0]
         crud.closeConnection()
 
         return verse_id
@@ -178,7 +178,7 @@ class CreateQueueTable(Logs):
         # print(' Имя - {0},\n Email - {1},\n exec_time - {2},\n '
         #       'verse_id - {3}\n'.format(name,email,exec_time,verse_id))
         crud=Crud('localhost','andrew','andrew','verses')
-        crud.sql="INSERT INTO queue (name, email, exec_time, verse_id)" \
+        crud.sql="INSERT INTO queue (name, email, exec_time, verse_id) " \
                  "VALUES (\'{0}\',\'{1}\',\'{2}\',\'{3}\')".format(name,
                  email,exec_time,verse_id)
         crud.createAct()
@@ -228,7 +228,6 @@ class SendMail(Logs):
         #получить количество элементов queue
         crud.sql='SELECT * FROM queue'
         queue=crud.readAct()
-        print(len(queue))
         if (len(queue)) >= 1:
 
             # По-тихоньку отправляем письма из очереди
@@ -250,9 +249,9 @@ class SendMail(Logs):
 
         id=data[0]; name=data[1]; email=data[2]; verse_id=data[4]
 
-        verse_data=self.getWholeVerseData(verse_id)
+        verse_data=self.getWholeVerseData(verse_id)[0]
         # Формат verse_data: id  author  verse_name  verse_content
-
+        
         text='''\tПривет {0}!\n\n\tТвой сегодняшний автор - {1}\n {2:-<30}\n
              \tСтих называется: {3}\n {4:-<30}\n \
              {5}\n\n
@@ -313,7 +312,7 @@ class SendMail(Logs):
 
         crud=Crud('localhost','andrew','andrew','verses')
         crud.sql='SELECT exec_time FROM queue WHERE id=\'{0}\''.format(id)
-        exec_time=(crud.readAct())[0]
+        exec_time=(crud.readAct())[0][0]
         curTime=round(time.time())
         crud.closeConnection()
 
@@ -386,7 +385,7 @@ class TimeMarks(Logs):
     def getQueueLock(self):
 
         self.crud.sql='SELECT locked FROM time_marks WHERE name=\'queue\''
-        locked=self.crud.readAct()
+        locked=self.crud.readAct()[0]
         locked=locked[0]
 
         return locked
@@ -414,7 +413,7 @@ class TimeMarks(Logs):
         allowed_time=72000 #Эквивалентно 20-ти часам
 
         self.crud.sql=('SELECT last_time FROM time_marks WHERE name=\'queue\'')
-        last_time=self.crud.readAct()[0]
+        last_time=self.crud.readAct()[0][0]
 
         elapsed = self.curTime - last_time
         print('Прошло времени - {0}, а нужно {1} для сбрасывания '
@@ -459,6 +458,7 @@ if __name__ == "__main__":
     # Уж если нет блокировки на queue - сам Бог велел начать все с чистого
     # листа, удалив таблициу очереди. 
     if (time_marks.getQueueLock()) == 0:
+        print("I am here!")
         DropQueueTable()
     #Проверим блокировку очереди. Если блокировки нету - пишем туда
     # записи. Ну и после лочим.
